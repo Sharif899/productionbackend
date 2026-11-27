@@ -1,0 +1,16 @@
+# Build output
+target/
+*.jar
+*.class
+
+# Environment and secrets — never commit these
+.env
+
+# Logs
+*.log
+
+# IDE and OS
+.idea/
+*.iml
+.vscode/
+.DS_Store

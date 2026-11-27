@@ -1,0 +1,49 @@
+{
+  "total_requests": 5301,
+  "elapsed_seconds": 30.08,
+  "requests_per_second": 176.2,
+  "latency_ms": {
+    "p50": 49.69646300014574,
+    "p95": 111.6296139998667,
+    "p99": 188.19402200006152,
+    "max": 1823.3
+  },
+  "statuses": {
+    "200": 2775,
+    "201": 2526
+  },
+  "transport_errors": {},
+  "by_endpoint": {
+    "create": {
+      "requests": 2526,
+      "requests_per_second": 84.0,
+      "p50_ms": 80.56287399995199,
+      "p95_ms": 165.41409600040424,
+      "statuses": {
+        "201": 2526
+      }
+    },
+    "get": {
+      "requests": 2526,
+      "requests_per_second": 84.0,
+      "p50_ms": 15.7731799999965,
+      "p95_ms": 87.33573800009253,
+      "statuses": {
+        "200": 2526
+      }
+    },
+    "list": {
+      "requests": 249,
+      "requests_per_second": 8.3,
+      "p50_ms": 77.56549899977472,
+      "p95_ms": 113.41093500004717,
+      "statuses": {
+        "200": 249
+      }
+    }
+  },
+  "base_url": "http://localhost:8080",
+  "duration_seconds": 30,
+  "concurrency": 10,
+  "window_requests_per_second": 176.7
+}

@@ -1,0 +1,63 @@
+# production-backend — api + postgres + redis.
+# Copy .env.example to .env and fill in the passwords, then:
+#   docker compose up --build
+# The API listens on http://localhost:8080.
+
+services:
+  api:
+    build: .
+    container_name: production-backend-api
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/proddb
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-produser}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      CACHE_TYPE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      APP_RATE_LIMIT_REQUESTS_PER_MINUTE: ${APP_RATE_LIMIT_REQUESTS_PER_MINUTE:-100}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: production-backend-db
+    environment:
+      POSTGRES_DB: proddb
+      POSTGRES_USER: ${POSTGRES_USER:-produser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-produser} -d proddb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: production-backend-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:
